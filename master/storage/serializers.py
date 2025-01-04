@@ -11,12 +11,18 @@ class PlaceSerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Item
-        fields = ['id', 'name', 'description', 'created_at']
+        fields = ['id', 'name', 'description']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
-        fields = ['id', 'username', 'first_name']
+        fields = ['id', 'username', 'first_name', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        return models.User.objects.create_user(username=validated_data['username'],
+                                                password=validated_data['password'],
+                                                first_name=validated_data.get('first_name', ''))
 
 class ItemPlacedSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,9 +30,11 @@ class ItemPlacedSerializer(serializers.ModelSerializer):
         fields = ['item', 'place', 'quantity_of_packs', 'no_in_packs', 'placed_at', 'last_modified']
 
 class UserPlacementSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+
     class Meta:
         model = models.UserPlacement
-        fields = ['user', 'placement', 'quantity', 'role', 'assigned_at', 'last_modified']
+        fields = ['user', 'placement', 'quantity', 'assigned_at', 'last_modified']
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
