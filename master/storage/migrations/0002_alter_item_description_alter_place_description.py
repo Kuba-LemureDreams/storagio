@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('storage', '0001_initial'),
+        ("storage", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='item',
-            name='description',
+            model_name="item",
+            name="description",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='place',
-            name='description',
+            model_name="place",
+            name="description",
             field=models.TextField(blank=True, null=True),
         ),
     ]
