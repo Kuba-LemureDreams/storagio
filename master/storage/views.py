@@ -5,9 +5,18 @@ from . import permissions as my_perms
 
 # Create your views here.
 class ListCreateItems(generics.ListCreateAPIView):
-    queryset = models.Item.objects.all()
     serializer_class = serializers.ItemSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        name = self.request.query_params.get("name")
+
+        if name:
+            queryset = models.Item.objects.filter(name=name)
+        else:
+            queryset = models.Item.objects.all()
+
+        return queryset
 
 
 class RetrieveUpdateDeleteItems(generics.RetrieveUpdateDestroyAPIView):
